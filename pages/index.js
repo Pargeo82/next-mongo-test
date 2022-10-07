@@ -3,13 +3,36 @@ import dbConnect from "../lib/dbConnect";
 import Header from "../components/header";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function Home({ pice }) {
+  const router = useRouter();
   const { data: session } = useSession();
-  console.log(session);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  async function deleteArticle(props, _id, router) {
+    const data = await fetch(`/api/pice/${_id}`, {
+      method: "DELETE",
+    });
+    const res = await data.json();
+    if (res.error) {
+      setErrorMessage(res.error.message);
+    } else {
+      setSuccessMessage(`${res.name} uspješno izbrisan(a)`);
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
+    }
+  }
+
+  // console.log(session);
   return (
     <>
       <Header />
+      <div className="fixed-top">{errorMessage && errorMessage}</div>
+      <div className="fixed-top">{successMessage && successMessage}</div>
       <Link href="/new">
         <button>Nova Cuga</button>
       </Link>
@@ -21,8 +44,28 @@ export default function Home({ pice }) {
           <div>{cuga.tip}</div>
           <div>{`${cuga.cijenaKN.toFixed(2)}KN`}</div>
           <div>{`${cuga.cijenaEUR.toFixed(2)}€`}</div>
-          <div>{session ? <button>Edit</button> : ""}</div>
-          <div>{session ? <button>Delete</button> : ""}</div>
+          <div>
+            {session ? (
+              <Link href={"/edit/{id}"}>
+                <button>Edit</button>
+              </Link>
+            ) : (
+              ""
+            )}
+          </div>
+          <div>
+            {session ? (
+              <button
+                onClick={(event) => {
+                  deleteArticle(event, cuga._id, router);
+                }}
+              >
+                Delete
+              </button>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       ))}
     </>

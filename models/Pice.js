@@ -3,15 +3,15 @@ import mongoose from "mongoose";
 const PiceSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Moraš imati ime artikla"],
+    required: [true, "Fali ime artikla"],
   },
   nameEng: {
     type: String,
-    required: [true, "Fali ti ime artikla na engleskom"],
+    required: [true, "Fali ime artikla na engleskom"],
   },
   tip: {
     type: String,
-    required: [true, "Fali ti tip artikla"],
+    required: [true, "Fali tip artikla"],
     enum: [
       "napitci",
       "gazirano",
@@ -27,7 +27,7 @@ const PiceSchema = new mongoose.Schema({
   },
   mjera: {
     type: String,
-    required: [true, "Fali ti mjera"],
+    required: [true, "Fali mjera"],
     enum: [
       "kom",
       "por",
@@ -47,11 +47,13 @@ const PiceSchema = new mongoose.Schema({
   },
   cijenaKN: {
     type: Number,
-    required: [true, "Nemaš cijenu u kunama"],
+    required: [true, "Nema cijene u kunama"],
+    min: [0.01, "Cijena ne može biti 0"],
   },
   cijenaEUR: {
     type: Number,
-    required: [true, "Nemaš cijenu u eurima"],
+    required: [true, "Nema cijene u eurima"],
+    min: [0.01, "Cijena ne može biti 0"],
   },
 });
 
