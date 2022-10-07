@@ -20,3 +20,33 @@ a {
   flex-direction: row;
   gap: 2rem;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 80%;
+  width: 50%;
+  gap: 1rem;
+  margin: 2rem auto;
+}
+
+.container {
+  display: flex;
+  align-content: center;
+}
+
+.numbersInput {
+  width: 40%;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

@@ -9,6 +9,22 @@ const PiceSchema = new mongoose.Schema({
     type: String,
     required: [true, "Fali ti ime artikla na engleskom"],
   },
+  tip: {
+    type: String,
+    required: [true, "Fali ti tip artikla"],
+    enum: [
+      "napitci",
+      "gazirano",
+      "sokovi",
+      "mineralna",
+      "tocenoPivo",
+      "pivo",
+      "zestoka",
+      "vino",
+      "trgovacka",
+      "stranaZestoka",
+    ],
+  },
   mjera: {
     type: String,
     required: [true, "Fali ti mjera"],
