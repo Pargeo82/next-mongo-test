@@ -1,5 +1,6 @@
-import { useRouter } from "next/router";
+import dbConnect from "../../lib/dbConnect";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 Number.prototype.round = function (places) {
   return +(Math.round(this + "e+" + places) + "e-" + places);
@@ -22,17 +23,18 @@ const getValues = ({ name, value, valueAsNumber }) => {
   }
 };
 
-export default function New() {
+export default function EditPice({ pice }) {
   const router = useRouter();
-
   const [form, setForm] = useState({
-    name: "",
-    nameEng: "",
-    mjera: "",
-    tip: "",
-    cijenaKN: 0,
-    cijenaEUR: 0,
+    _id: pice._id,
+    name: pice.name,
+    nameEng: pice.nameEng,
+    mjera: pice.mjera,
+    tip: pice.tip,
+    cijenaKN: pice.cijenaKN,
+    cijenaEUR: pice.cijenaEUR,
   });
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -51,12 +53,10 @@ export default function New() {
     }
   };
 
-  // console.log(form);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = await fetch("/api/pice", {
-      method: "POST",
+    const data = await fetch(`/api/pice/${pice._id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -66,7 +66,7 @@ export default function New() {
     if (res.error) {
       setErrorMessage(res.error.message);
     } else {
-      setSuccessMessage("Uspješno dodan artikl");
+      setSuccessMessage("Uspješno promijenjen artikl");
       setTimeout(() => {
         router.push("/");
       }, 1500);
@@ -145,4 +145,13 @@ export default function New() {
       </form>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  await dbConnect();
+
+  const { id } = context.query;
+  const res = await fetch(`${process.env.BASE_FETCH_URL}/api/pice/${id}`);
+  const pice = await res.json();
+  return { props: { pice } };
 }

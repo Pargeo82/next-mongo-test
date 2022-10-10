@@ -46,7 +46,7 @@ export default function Home({ pice }) {
           <div>{`${cuga.cijenaEUR.toFixed(2)}€`}</div>
           <div>
             {session ? (
-              <Link href={"/edit/{id}"}>
+              <Link href={`/edit/${cuga._id}`}>
                 <button>Edit</button>
               </Link>
             ) : (
