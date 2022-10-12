@@ -1,7 +1,9 @@
 import { getPice, updatePice, deletePice } from "../../../utils/actions";
+import { getSession } from "next-auth/react";
 
 export default async function handler(req, res) {
   const id = req.query.id;
+  const session = await getSession({ req });
 
   try {
     switch (req.method) {
@@ -10,13 +12,20 @@ export default async function handler(req, res) {
         break;
 
       case "PUT":
-        res.json(await updatePice(id, req.body));
-        break;
+        if (!session) {
+          res.status(401).json({ error: "Unauthenticated user" });
+        } else {
+          res.json(await updatePice(id, req.body));
+          break;
+        }
 
       case "DELETE":
-        res.json(await deletePice(id));
-        break;
-
+        if (!session) {
+          res.status(401).json({ error: "Unauthenticated user" });
+        } else {
+          res.json(await deletePice(id));
+          break;
+        }
       default:
         res.status(404).send("No response for that method");
     }
